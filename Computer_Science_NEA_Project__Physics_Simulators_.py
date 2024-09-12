@@ -38,7 +38,15 @@ class waveNode():
         self.displacement= displacement
         self.nextNode= nextNode
 
+class stopwatch()
+    def _init_(self,minutes seconds,stopwatchImage):
+        self.minutes= minutes
+        self.seconds= seconds
+        self.stopwatchImage= pygame.draw.square(window, (1,1))
+                                        
 
+    
+    
 
 
 
