@@ -14,17 +14,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Computer_Science_NEA_Project__Physics_Simulators_.py",
               "DocumentMoniker": "C:\\Users\\heayl\\source\\repos\\Liu-J-Alex\\Computer-Science-NEA\\Computer_Science_NEA_Project__Physics_Simulators_.py",
               "RelativeDocumentMoniker": "Computer_Science_NEA_Project__Physics_Simulators_.py",
-              "ToolTip": "C:\\Users\\heayl\\source\\repos\\Liu-J-Alex\\Computer-Science-NEA\\Computer_Science_NEA_Project__Physics_Simulators_.py*",
-              "RelativeToolTip": "Computer_Science_NEA_Project__Physics_Simulators_.py*",
-              "ViewState": "AgIAAEIAAAAAAAAAAIAwwFcAAAAUAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\heayl\\source\\repos\\Liu-J-Alex\\Computer-Science-NEA\\Computer_Science_NEA_Project__Physics_Simulators_.py",
+              "RelativeToolTip": "Computer_Science_NEA_Project__Physics_Simulators_.py",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAkAAAAxAAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEVSURBVDhPrZOhboRAEIaHhqQIJAKJQCAQCB4AXR4EiUAgkUhwGCSCF2h4AAwOCQkCiUQgqGgy3Z2Uy3FHL\u002Blxf/Jnl5n8HzsbEL6/PhCelPj\u002BCfALeMo8\u002B8Y2p7QDjONIrusafN\u002BnmiiK4LouVFUFXddBlmWgKAr1uHYATdOgLEvo\u002Bx7SNAXHcSCOYyiKApqmgTzPwbZtgl50fQdcLISGYeC6ruh5Hs7zjEmS7GbfTNlbwDRNuCwLrZIk0RqG4S64\u002BRAQBAGdgh2TamwEHIYBLctCXdcxiiKUZflvALuHyzO3qqrYti31uDiMg3jvDsDD25tvbZom\u002Bbp2B/ivefa1HxIb8dCPtAMIgnDoRzo9wqnfGQDgB6iaAPhrbB0nAAAAAElFTkSuQmCC",
               "WhenOpened": "2024-09-11T20:28:41.137Z",
               "EditorCaption": ""
