@@ -46,13 +46,18 @@ class ammeter():
 #_____________________________________________________________
 
 class waveNode():
-    def _init_(self,displacement,nextNode,window,x,y):
-        self.displacement= displacement
-        self.nextNode= nextNode
-        self.circle= pygame.draw.circle(window,x,y,10,10)
+    def __init__(self,x,y):
+        self.displacement= 0
+        self.nextNode= 1
+        self.colour= (0,255,0)
+        self.x= x
+        self.y= y
+        self.pos=(x,y)
+
+
 
 class stopwatch():
-   def _init__(self,StopwatchDisplay,minutes=0,seconds=0):
+   def __init__(self,StopwatchDisplay,minutes=0,seconds=0):
         self.minutes= minutes
         self.seconds= seconds
         self.StopwatchDisplay= StopwatchDisplay
@@ -86,15 +91,15 @@ def WaveSim():
     resetButton=Button(windowTkinter, text="Reset Wave",command= Iteration1Function,foreground="Black").grid(row=6,column=0,sticky="w")
 
     amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= Iteration1Function,foreground="Black").grid(row=7,column=1,sticky="s")
-    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= Iteration1Function,foreground="Black").gird(row=7,column=2,sticky="s")
+    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= Iteration1Function,foreground="Black").grid(row=7,column=2,sticky="s")
 
-    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= Iteration1Function,foreground="Black").grid(row=7,column=3,sticky="s")
-    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= Iteration1Function,foreground="Black").gird(row=7,column=4,sticky="s")
+    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= Iteration1Function,foreground="Black").grid(row=7,column=4,sticky="s")
+    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= Iteration1Function,foreground="Black").grid(row=7,column=5,sticky="s")
 
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
 
-    waveNodeList=[]
+    waveNodeList=[waveNode(10,50),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10)]#This is the list of nodes that make up the wave medium
     nodeNumber=len(waveNodeList)
 
     
@@ -102,7 +107,8 @@ def WaveSim():
        waveMedium.fill((0, 0, 0))  
        
        for nodes in range(0,nodeNumber):
-           pygame.draw.circle(waveMedium,(255,0,0),waveNodeList[nodes].circle)
+           pygame.draw.circle(waveMedium,waveNodeList[nodes].colour,(waveNodeList[nodes].pos),10)# This loop iterates through the waveNodeList for all of the wave node objects and takes in each object's x and y attribbutes
+                                                                                               
 
        pygame.display.update()
        # schedule the next update using recursion
