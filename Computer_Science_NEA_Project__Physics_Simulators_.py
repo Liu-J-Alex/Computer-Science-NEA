@@ -44,10 +44,10 @@ class waveNode():
         self.nextNode= nextNode
 
 class stopwatch():
-    def _init_(self,minutes seconds,stopwatchImage):
-        self.minutes= minutes
+    def __init__(self,minutes=0,seconds=0):
         self.seconds= seconds
-        self.stopwatchImage= pygame.draw.square(window, (1,1))
+
+
                                         
 
     
