@@ -26,10 +26,15 @@ class electron():
         image= pygame.draw.circle(windowSurface,(255,255,255),(x,y),10,0)
 
 class battery():
-    def __init__(self,voltage,voltageGain,x,y):
+    def __init__(self,x,y,voltage,voltageGain):
         self.voltage= voltage
         self.voltageGain=voltageGain
         self.rect= pygame.Rect(x,y,100,50)
+
+
+    def drawBattery(self,surface):
+        pygame.draw.rect(surface,(0,255,0),self.rect)
+
 
 
 class resistor():
@@ -99,7 +104,13 @@ def WaveSim():
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
 
-    waveNodeList=[waveNode(10,50),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10),waveNode(10,10)]#This is the list of nodes that make up the wave medium
+    waveNodeList=[]#This is the list of nodes that make up the wave medium
+    # waveNode(25,180),waveNode(45,180),waveNode(65,180),waveNode(85,180),waveNode(105,180)
+    #               ,waveNode(125,180),waveNode(145,180),waveNode(165,180),waveNode(185,180),waveNode(205,180)
+    #               ,waveNode(225,180),waveNode(245,180),waveNode(265,180),waveNode(285,180),waveNode(305,180)
+    #               ,waveNode(325,180),waveNode(345,180),waveNode(365,180),waveNode(385,180),waveNode(405,180)
+    #               ,waveNode(425,180),waveNode(445,180),waveNode(465,180),waveNode(485,180),waveNode(505,180)
+
     nodeNumber=len(waveNodeList)
 
     
@@ -120,8 +131,14 @@ def WaveSim():
     windowTkinter.mainloop()
     
 
+class ComponentConstructor():
+    def __init__(self):
+        self.componentList= []
 
+    def instance(self,classInstance):
+        self.componentList.append(classInstance)
     
+
 
 def CircuitBuilder():
     global screenSizeTk
@@ -142,14 +159,15 @@ def CircuitBuilder():
     componentList=[]#This List holds all of the compoents for the circuit builder
     componentNumber=len(componentList)#This number is the number of components in the list
 
-    def componentCreation():
-        componentList.append(battery(100,100,100,100))
-        print("Batery has been added")
-        componentNumber=len(componentList)
+    def componentCreation(x,y):
+        batteryInstance=battery(x,y,10,10)
+        componentList.append(batteryInstance)
+        print (componentList)
+
     
     #Tkinter Buttons
     clearButton= Button(windowTkinter,text="Clear",command=Iteration1Function,foreground="white",background="red").grid(row=9,column=0,sticky="w")
-    batteryButton= Button(windowTkinter,text="Battery",command= componentCreation,foreground="black").grid(row=3,column=0,sticky="w")
+    batteryButton= Button(windowTkinter,text="Battery",command= componentCreation(10,10),foreground="black").grid(row=3,column=0,sticky="w")
     wireButton= Button(windowTkinter,text="Wire",command= Iteration1Function,foreground="black").grid(row=4,column=0,sticky="w")
     resistorButton= Button(windowTkinter,text="Resistor", command=Iteration1Function,foreground="black").grid(row=5,column=0,sticky="w")
     bulbButton= Button(windowTkinter,text="Bulb", command=Iteration1Function,foreground="black").grid(row=6,column=0,sticky="w")
@@ -163,8 +181,8 @@ def CircuitBuilder():
     
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         buildingSpace.fill((0,0,0))  
-        for compoent in range(0,componentNumber):# This loop iterates through the Components list and draws the them to the screen
-            pygame.draw.rect(buildingSpace,(0,255,0),componentList[compoent].rect)
+        for battery in componentList:# This loop iterates through the Components list and draws the them to the screen
+            battery.drawBattery(buildingSpace)
 
         
         for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
@@ -215,3 +233,68 @@ MainMenu()
 #These functions will hold all of my main screens, e.g the main menu and the wave simulator.
 #Menu is going to be the last function in the program since it needs to run the other 2 functions that need to be defined before the menu.
 
+# import pygame
+# import tkinter as tk
+
+# class Square:
+#     def __init__(self, x, y, size, color):
+#         self.x = x
+#         self.y = y
+#         self.size = size
+#         self.color = color
+
+#     def draw(self, surface):
+#         pygame.draw.rect(surface, self.color, (self.x, self.y, self.size, self.size))
+
+# class Game:
+#     def __init__(self):
+#         pygame.init()
+#         self.screen_width, self.screen_height = 800, 600
+#         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+#         pygame.display.set_caption("Square Drawer")
+
+#         self.root = tk.Tk()
+#         self.root.title("Tkinter GUI")
+#         self.root.geometry("400x100")  # Adjust the window size
+
+#         self.squares = []
+
+#     def draw_square(self, x, y):# Adds the square to the squares list
+#         size = 50
+#         color = (255, 0, 0)  # Red
+
+#         new_square = Square(x, y, size, color)
+#         self.squares.append(new_square)
+
+#     def print_squares(self): # Prints the coordinates of the squares on the pygame screen
+#         print("Array of squares:") 
+#         for square in self.squares:
+#             print(f"({square.x}, {square.y})")
+
+#     def run(self):
+#         running = True
+#         while running:
+#             for event in pygame.event.get():
+#                 if event.type == pygame.QUIT:
+#                     running = False
+#                 elif event.type == pygame.MOUSEBUTTONDOWN:
+#                     if event.button == 1:  # Left mouse button
+#                         x, y = event.pos
+#                         self.draw_square(x, y) # Adds an instance of square to the squares list
+#                 elif event.type == pygame.KEYDOWN:
+#                     if event.key == pygame.K_SPACE:
+#                         self.print_squares()
+
+#             self.screen.fill((255, 255, 255))  # White background
+
+#             for square in self.squares:# Draws the squares to the pygame screen
+#                 square.draw(self.screen)
+
+#             pygame.display.update()
+
+#         pygame.quit()
+#         self.root.mainloop()
+
+# if __name__ == "__main__":
+#     game = Game()
+#     game.run()
