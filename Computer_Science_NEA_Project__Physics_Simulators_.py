@@ -38,7 +38,11 @@ class battery():
 
 
 class resistor():
-    pass
+    def __init__(self,x,y):
+        self.resistance = 10
+        self.rect= pygame.Rect(x,y,100,50)
+    def drawResistor(self,surface):
+        pygame.draw.rect(surface,(255,0,0),self.rect)
 
 class wire():
     pass
