@@ -68,8 +68,7 @@ class stopwatch():
         self.StopwatchDisplay= StopwatchDisplay
                                         
 
-    
-
+  
 
 
 
@@ -104,12 +103,12 @@ def WaveSim():
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
 
-    waveNodeList=[]#This is the list of nodes that make up the wave medium
-    # waveNode(25,180),waveNode(45,180),waveNode(65,180),waveNode(85,180),waveNode(105,180)
-    #               ,waveNode(125,180),waveNode(145,180),waveNode(165,180),waveNode(185,180),waveNode(205,180)
-    #               ,waveNode(225,180),waveNode(245,180),waveNode(265,180),waveNode(285,180),waveNode(305,180)
-    #               ,waveNode(325,180),waveNode(345,180),waveNode(365,180),waveNode(385,180),waveNode(405,180)
-    #               ,waveNode(425,180),waveNode(445,180),waveNode(465,180),waveNode(485,180),waveNode(505,180)
+    waveNodeList=[ waveNode(25,180),waveNode(45,180),waveNode(65,180),waveNode(85,180),waveNode(105,180)
+                  ,waveNode(125,180),waveNode(145,180),waveNode(165,180),waveNode(185,180),waveNode(205,180)
+                  ,waveNode(225,180),waveNode(245,180),waveNode(265,180),waveNode(285,180),waveNode(305,180)
+                  ,waveNode(325,180),waveNode(345,180),waveNode(365,180),waveNode(385,180),waveNode(405,180)
+                  ,waveNode(425,180),waveNode(445,180),waveNode(465,180),waveNode(485,180),waveNode(505,180)]#This is the list of nodes that make up the wave medium
+
 
     nodeNumber=len(waveNodeList)
 
@@ -131,12 +130,7 @@ def WaveSim():
     windowTkinter.mainloop()
     
 
-class ComponentConstructor():
-    def __init__(self):
-        self.componentList= []
 
-    def instance(self,classInstance):
-        self.componentList.append(classInstance)
     
 
 
@@ -159,25 +153,14 @@ def CircuitBuilder():
     componentList=[]#This List holds all of the compoents for the circuit builder
     componentNumber=len(componentList)#This number is the number of components in the list
 
-    def componentCreation(x,y):
-        batteryInstance=battery(x,y,10,10)
-        componentList.append(batteryInstance)
-        print (componentList)
+    def componentCreation():
+        componentList.append(battery(10,10,10,10))
+        componentNumber= len(componentList)
 
-    
-    #Tkinter Buttons
-    clearButton= Button(windowTkinter,text="Clear",command=Iteration1Function,foreground="white",background="red").grid(row=9,column=0,sticky="w")
-    batteryButton= Button(windowTkinter,text="Battery",command= componentCreation(10,10),foreground="black").grid(row=3,column=0,sticky="w")
-    wireButton= Button(windowTkinter,text="Wire",command= Iteration1Function,foreground="black").grid(row=4,column=0,sticky="w")
-    resistorButton= Button(windowTkinter,text="Resistor", command=Iteration1Function,foreground="black").grid(row=5,column=0,sticky="w")
-    bulbButton= Button(windowTkinter,text="Bulb", command=Iteration1Function,foreground="black").grid(row=6,column=0,sticky="w")
-    ammeterButton= Button(windowTkinter,text="Ammeter", command=Iteration1Function,foreground="black").grid(row=7,column=0,sticky="w")
-    voltmeterButton=Button(windowTkinter,text="Voltmeter", command=Iteration1Function,foreground="black").grid(row=8,column=0,sticky="w")
 
-    quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=5)
-    backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
-    
-            
+    def clearCompList():
+        componentList=[]
+        componentNumber=len(componentList)
     
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         buildingSpace.fill((0,0,0))  
@@ -194,14 +177,22 @@ def CircuitBuilder():
         pygame.display.update()
         # schedule the next update using recursion
         windowTkinter.after(100, update_pygame)
+    
+    #Tkinter Buttons
+    clearButton= Button(windowTkinter,text="Clear",command=clearCompList,foreground="white",background="red").grid(row=9,column=0,sticky="w")
+    batteryButton= Button(windowTkinter,text="Battery",command= componentCreation,foreground="black").grid(row=3,column=0,sticky="w")
+    wireButton= Button(windowTkinter,text="Wire",command= Iteration1Function,foreground="black").grid(row=4,column=0,sticky="w")
+    resistorButton= Button(windowTkinter,text="Resistor", command=Iteration1Function,foreground="black").grid(row=5,column=0,sticky="w")
+    bulbButton= Button(windowTkinter,text="Bulb", command=Iteration1Function,foreground="black").grid(row=6,column=0,sticky="w")
+    ammeterButton= Button(windowTkinter,text="Ammeter", command=Iteration1Function,foreground="black").grid(row=7,column=0,sticky="w")
+    voltmeterButton=Button(windowTkinter,text="Voltmeter", command=Iteration1Function,foreground="black").grid(row=8,column=0,sticky="w")
 
+    quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=5)
+    backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
+    
+            
     # Start the Pygame updating loop
     windowTkinter.after(100, update_pygame)
-
-    
-
-
-    
     windowTkinter.mainloop()
     
     
@@ -270,6 +261,7 @@ MainMenu()
 #         print("Array of squares:") 
 #         for square in self.squares:
 #             print(f"({square.x}, {square.y})")
+#         print(self.squares)
 
 #     def run(self):
 #         running = True
