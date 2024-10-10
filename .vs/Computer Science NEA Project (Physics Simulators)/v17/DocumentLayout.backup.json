@@ -14,8 +14,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -32,9 +36,9 @@
               "RelativeDocumentMoniker": "Computer_Science_NEA_Project__Physics_Simulators_.py",
               "ToolTip": "C:\\Users\\2006a\\source\\repos\\Liu-J-Alex\\Computer-Science-NEA\\Computer_Science_NEA_Project__Physics_Simulators_.py*",
               "RelativeToolTip": "Computer_Science_NEA_Project__Physics_Simulators_.py*",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAwwIAAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAOJSURBVDhPrZRdaFRHFMf/M/crrlGTDdk0abYmJrbUmNiWQCsFaSUipWnAp/bRB/vSQksQhBZqUCykEQyEPvWlL1Jo8aHQVIRWEFqI1FAfIlI0i3WrIYJba2J2773z1TNz1/UDKRQ87P\u002BemXvn/vacM3MPnqoZY5j1HyydGs\u002BzaPQX9SNfwTXV6bO4I\u002BBJwZdx3tNJ3hMq1BKREgi1cr5JC0RGk5fgpKAqfh7sX/rWAaeWzy5ub\u002BroK3vz\u002BDw\u002Bij62Dr3cR18A9IQK3UGCUBFIWqhC\u002BJhfuZvHWlJZHHjp3lbfAn\u002BT51m714/jV86jebUHNZ6iDIE7TOAPKHARIqkBsmpoLOFLglOEG5BioDfEm10BtPFTy8qA\u002Bhz/K/kJ1ds5BPNLqKxI3FqVkOSl9XUZaRrSQjv/2aetCF4oIL77twNye2nzhLytb6DVix3kwM4DmHpvCgffOYjixqKDFQtFTHw4gZnDMxgeGG6AQb/mMI\u002BQm7gB7AyNfIZq1sIT9/Ku53dh4coCNrdvxomPTyAX5jD33Rx6i70oXSuhp7snA4oMmMN62hiqDZlLucuTqoXQ//AYZYrQKAMVK9TWaoijGGNvjKFULmH/R/shEtGAaUlpGxrD7i3TluUi7AqF7AslNiGL0AJ3v7IbN5dvYvzoOC4uXERbSxtyUQ6F1gK2dG/JYPWUwRkMewjYwaR8ztPgqWgUf/rraRybOYbr5eu4dPkSTp46iQtnLmD2m1kM76jXkP6YQoRihOEZ0KXcrLRs5Qqsxhxw9P3R7AXS/d088sURTB6fRJqkEDGlTTAHJKPorHsQ4QZjZLuSYPGTj4YT1ay6Vn0E5lSvoaalDWCzTmU\u002BTenkPwA8Drtfs0dgNLcYTREyztwuO2BOaLNJ0Lcp1P\u002BCGV1PmUS3nLkaRpRuZD9yemRhk59MYujFoWwlyaY18tbIE2F0XFzxGO2NnbkIOQVtvXuZFh\u002BaOIS9\u002B/Ziz9gejLw98h\u002BwzOyMcnA3HWh\u002BuXuuXa\u002B\u002B9uuf63F1gW7YRxZu19TH1hrzh2zHthx2vvo6KsunfxjcWhnLgDc6f98ovJcDvwWBH6GJNyGyQgjjUSG4R6LUyCtGokpZCQQkGusE927Nfj/YX9nngJcXO76KjHiX\u002BcweKcOpIj7ninOuDefUhrmhnaTe5VHT8qit\u002BpS1Z6iRGWpumlqXYerO9NCzpS8t7yka8C9L2m0aWMo\u002BTAAAAABJRU5ErkJggg==",
-              "WhenOpened": "2024-09-11T20:28:41.137Z",
+              "WhenOpened": "2024-10-10T10:17:33.402Z",
               "EditorCaption": ""
             }
           ]
