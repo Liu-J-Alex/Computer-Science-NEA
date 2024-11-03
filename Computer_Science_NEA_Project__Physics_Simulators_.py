@@ -1,3 +1,4 @@
+from re import L
 import time,threading,tkinter,sqlite3,pygame,os,sys
 from turtle import right
 from tkinter import *
@@ -25,33 +26,66 @@ class electron():
     def display(self,windowSurface,x,y):
         image= pygame.draw.circle(windowSurface,(255,255,255),(x,y),10,0)
 
-class battery():
+class compoentTemplate():
+    def __init__(self):
+        pass
+    
+    def destroy(self):
+        self.destroy
+
+class battery(compoentTemplate):
     def __init__(self,x,y,voltage,voltageGain):
         self.voltage= voltage
         self.voltageGain=voltageGain
         self.rect= pygame.Rect(x,y,100,50)
-
+        super()
 
     def drawBattery(self,surface):
         pygame.draw.rect(surface,(0,255,0),self.rect)
 
 
 
-class resistor():
+class resistor(compoentTemplate):
     def __init__(self,x,y):
         self.resistance = 10
         self.rect= pygame.Rect(x,y,100,50)
+        super()
     def drawResistor(self,surface):
         pygame.draw.rect(surface,(255,0,0),self.rect)
 
-class wire():
-    pass
+class wire(compoentTemplate):
+    def __init__(self,x,y):
+        self.rect= pygame.Rect(x,y,50,100)
+        super()
 
-class voltmeter():
-    pass
+    def drawWire(self,surface):
+        pygame.draw.rect(surface,(124,124,124),self.rect)
 
-class ammeter():
-    pass
+class bulb(compoentTemplate):
+    def __init__(self,x,y):
+        self.brightness= 0
+        self.x=x
+        self.y= y
+        super()
+
+    def drawBulb(self,surface):
+        pygame.draw.circle(surface,(255,255,0),(self.x,self.y),5)
+
+
+class voltmeter(compoentTemplate):
+    def __init__ (self,x,y):
+        self.rect= pygame.Rect(x,y,100,50)
+        super()
+
+    def drawVoltmeter(self,surface):
+        pygame.draw.rect(surface,(0,0,255),self.rect)
+
+class ammeter(compoentTemplate):
+    def __init__ (self,x,y):
+        self.rect= pygame.Rect(x,y,100,50)
+        super()
+    def drawAmmeter(self,surface):
+        pygame.draw.rect(surface,(173,216,230),self.rect)
 #_____________________________________________________________
 
 class waveNode():
@@ -154,28 +188,78 @@ def CircuitBuilder():
     #pygame elements:
     buildingSpaceSize= (160,90)
     buildingSpace=pygame.display.set_mode(buildingSpaceSize)
-    componentList=[]#This List holds all of the compoents for the circuit builder
-    componentNumber=len(componentList)#This number is the number of components in the list
-
-    def componentCreation():
-        componentList.append(battery(10,10,10,10))
-        componentNumber= len(componentList)
 
 
-    def clearCompList():
-        componentList=[]
-        componentNumber=len(componentList)
-    
+    # componentList=[]#This List holds all of the compoents for the circuit builder
+    # componentNumber=len(componentList)#This number is the number of components in the list
+    # def componentCreation():
+    #     componentList.append(battery(10,10,10,10))
+    #     componentNumber= len(componentList)
+
+    BatteryList=[]
+    BatteryNumber=len(BatteryList)
+    def BatteryCreation():
+        BatteryList.append(battery(10,10,10,10))
+    ResistorList=[]
+    ResistorNumber=len(ResistorList)
+    def ResistorCreation():
+        ResistorList.append(resistor(10,10))
+    WireList=[]
+    WireNumber=len(WireList)
+    def WireCreation():
+        WireList.append(wire(10,10))
+    BulbList=[]
+    BulbNumber=len(BulbList)
+    def BulbCreation():
+        BulbList.append(bulb(10,10))
+    VoltmeterList=[]
+    VoltmeterNumber=len(VoltmeterList)
+    def VoltmeterCreation():
+        VoltmeterList.append(voltmeter(10,10))
+
+    AmmeterList=[]
+    AmmeterNumber=len(AmmeterList)
+    def AmmeterCreation():
+        AmmeterList.append(ammeter(10,10))
+
+    def clearScreen():
+        compList=[BatteryList,ResistorList,WireList,BulbList,VoltmeterList,AmmeterList]
+        for CompType in compList:
+            for CompObject in CompType:
+                CompObject.destroy
+        buildingSpace.fill((0,0,0))
+        return compList
+        #In this procceedure I am storing the individual component Lists in 1 2d array 
+        #that I can search through and pop the individual objects in each list. 
+
+
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         buildingSpace.fill((0,0,0))  
-        for battery in componentList:# This loop iterates through the Components list and draws the them to the screen
+        for battery in BatteryList:# This loop iterates through the Battery list and draws the them to the screen
             battery.drawBattery(buildingSpace)
 
-        
+        for resistor in ResistorList:
+            resistor.drawResistor(buildingSpace)
+
+        for bulb in BulbList:
+            bulb.drawBulb(buildingSpace)
+            
+        for wire in WireList:
+            wire.drawWire(buildingSpace)
+            
+        for ammeter in AmmeterList:
+            ammeter.drawAmmeter(buildingSpace)
+
+        for voltmeter in VoltmeterList:
+            voltmeter.drawVoltmeter(buildingSpace)
+
+
         for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
             if events == pygame.QUIT:
                 pygame.quit
                 sys.exit
+
+   #         elif
 
 
         pygame.display.update()
@@ -183,13 +267,13 @@ def CircuitBuilder():
         windowTkinter.after(100, update_pygame)
     
     #Tkinter Buttons
-    clearButton= Button(windowTkinter,text="Clear",command=clearCompList,foreground="white",background="red").grid(row=9,column=0,sticky="w")
-    batteryButton= Button(windowTkinter,text="Battery",command= componentCreation,foreground="black").grid(row=3,column=0,sticky="w")
-    wireButton= Button(windowTkinter,text="Wire",command= Iteration1Function,foreground="black").grid(row=4,column=0,sticky="w")
-    resistorButton= Button(windowTkinter,text="Resistor", command=Iteration1Function,foreground="black").grid(row=5,column=0,sticky="w")
-    bulbButton= Button(windowTkinter,text="Bulb", command=Iteration1Function,foreground="black").grid(row=6,column=0,sticky="w")
-    ammeterButton= Button(windowTkinter,text="Ammeter", command=Iteration1Function,foreground="black").grid(row=7,column=0,sticky="w")
-    voltmeterButton=Button(windowTkinter,text="Voltmeter", command=Iteration1Function,foreground="black").grid(row=8,column=0,sticky="w")
+    clearButton= Button(windowTkinter,text="Clear",command=clearScreen,foreground="white",background="red").grid(row=9,column=0,sticky="w")
+    batteryButton= Button(windowTkinter,text="Battery",command= BatteryCreation,foreground="black").grid(row=3,column=0,sticky="w")
+    wireButton= Button(windowTkinter,text="Wire",command= WireCreation,foreground="black").grid(row=4,column=0,sticky="w")
+    resistorButton= Button(windowTkinter,text="Resistor", command=ResistorCreation,foreground="black").grid(row=5,column=0,sticky="w")
+    bulbButton= Button(windowTkinter,text="Bulb", command=BulbCreation,foreground="black").grid(row=6,column=0,sticky="w")
+    ammeterButton= Button(windowTkinter,text="Ammeter", command=AmmeterCreation,foreground="black").grid(row=7,column=0,sticky="w")
+    voltmeterButton=Button(windowTkinter,text="Voltmeter", command= VoltmeterCreation,foreground="black").grid(row=8,column=0,sticky="w")
 
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=5)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
