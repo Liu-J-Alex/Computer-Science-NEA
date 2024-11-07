@@ -33,11 +33,26 @@ class compoentTemplate():
     def destroy(self):
         self.destroy
 
+    def isDragging(self):
+        if self.dragging:
+            return True
+        else:
+            return False
+
+    def drag(self):
+        self.dragging = True
+
+    def notDrag(self):
+        self.dragging = False
+
+
 class battery(compoentTemplate):
     def __init__(self,x,y,voltage,voltageGain):
         self.voltage= voltage
         self.voltageGain=voltageGain
-        self.rect= pygame.Rect(x,y,100,50)
+        self.x=x
+        self.y= y
+        self.rect= pygame.Rect(self.x,self.y,100,50)
         super()
 
     def drawBattery(self,surface):
@@ -48,14 +63,18 @@ class battery(compoentTemplate):
 class resistor(compoentTemplate):
     def __init__(self,x,y):
         self.resistance = 10
-        self.rect= pygame.Rect(x,y,100,50)
+        self.x=x
+        self.y= y
+        self.rect= pygame.Rect(self.x,self.y,100,50)
         super()
     def drawResistor(self,surface):
         pygame.draw.rect(surface,(255,0,0),self.rect)
 
 class wire(compoentTemplate):
     def __init__(self,x,y):
-        self.rect= pygame.Rect(x,y,50,100)
+        self.x=x
+        self.y= y
+        self.rect= pygame.Rect(self.x,self.y,50,100)
         super()
 
     def drawWire(self,surface):
@@ -66,14 +85,18 @@ class bulb(compoentTemplate):
         self.brightness= 0
         self.x=x
         self.y= y
+        self.r=5
+        self.rect= pygame.Rect(self.x,self.y,self.r,self.r)
         super()
 
     def drawBulb(self,surface):
-        pygame.draw.circle(surface,(255,255,0),(self.x,self.y),5)
+        pygame.draw.circle(surface,(255,255,0),(self.x,self.y),self.r)
 
 
 class voltmeter(compoentTemplate):
     def __init__ (self,x,y):
+        self.x=x
+        self.y= y
         self.rect= pygame.Rect(x,y,100,50)
         super()
 
@@ -82,6 +105,8 @@ class voltmeter(compoentTemplate):
 
 class ammeter(compoentTemplate):
     def __init__ (self,x,y):
+        self.x=x
+        self.y= y
         self.rect= pygame.Rect(x,y,100,50)
         super()
     def drawAmmeter(self,surface):
@@ -168,14 +193,6 @@ def WaveSim():
     windowTkinter.mainloop()
     
 
-class ComponentConstructor():
-    def __init__(self):
-        self.componentList= []
-
-    def instance(self,classInstance):
-        self.componentList.append(classInstance)
-    
-
 
 def CircuitBuilder():
     global screenSizeTk
@@ -227,8 +244,8 @@ def CircuitBuilder():
     def AmmeterCreation():
         AmmeterList.append(ammeter(10,10))
 
+    compList=[BatteryList,ResistorList,WireList,BulbList,VoltmeterList,AmmeterList]
     def clearScreen():
-        compList=[BatteryList,ResistorList,WireList,BulbList,VoltmeterList,AmmeterList]
         for CompType in compList:
             for CompObject in CompType:
                 CompObject.destroy
@@ -240,6 +257,31 @@ def CircuitBuilder():
 
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         buildingSpace.fill((0,0,0))  
+
+        for compoentType in compList: 
+            for component in compoentType:
+                Area= component.rect
+                if Area.collidepoint(pygame.mouse.get()) and pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
+                                                                                    #and if the mousebutton is being left clicked at the same time
+                    component.drag  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
+
+        for compoentType in compList: 
+            for component in compoentType:
+                Area= component.rect
+                if Area.collidepoint(pygame.mouse.get()) and pygame.MOUSEBUTTONUP:
+                    component.notdrag  
+
+
+        for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
+            if events == pygame.QUIT:
+                pygame.quit
+                sys.exit
+
+            for compentType in compList:
+                for component in compList:
+                    if component.isDragging(): 
+                        component.x,component.y = pygame.mouse.get_pos()
+
         for battery in BatteryList:# This loop iterates through the Battery list and draws the them to the screen
             battery.drawBattery(buildingSpace)
 
@@ -257,14 +299,6 @@ def CircuitBuilder():
 
         for voltmeter in VoltmeterList:
             voltmeter.drawVoltmeter(buildingSpace)
-
-
-        for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
-            if events == pygame.QUIT:
-                pygame.quit
-                sys.exit
-
-   #         elif
 
 
         pygame.display.update()
