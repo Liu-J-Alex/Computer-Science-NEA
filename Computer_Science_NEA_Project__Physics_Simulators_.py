@@ -28,11 +28,11 @@ class electron():
 
 class compoentTemplate():
     def __init__(self):
-        self.dragging= False
-        self.x=0
-        self.y=0
-        self.rect= pygame.Rect(self.x,self.y,0,0)
-    
+        self.dragging = False
+        self.x = 0
+        self.y = 0
+        self.rect = pygame.Rect(self.x, self.y, 0, 0)  
+
     def destroy(self):
         self.destroy
 
@@ -45,10 +45,11 @@ class compoentTemplate():
     def notDrag(self):
         self.dragging = False
 
-    def updatePostion(self,x,y): 
-        self.x= x
-        self.y= y
-        self.rect.topleft= (self.x,self.y)
+    def updatePosition(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.topleft = (self.x, self.y)  # Update rect position
+
 
 class battery(compoentTemplate):
     def __init__(self,x,y,voltage,voltageGain):
@@ -269,28 +270,7 @@ def CircuitBuilder():
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         buildingSpace.fill((0,0,0))  
 
-        for compoentType in compList: 
-            for component in compoentType:
-                Area= component.rect
-                if Area.collidepoint(pygame.mouse.get_pos()) and pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
-                                                                                    #and if the mousebutton is being left clicked at the same time
-                    component.drag()  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
-                    print("Dragging")
 
-            for compoentType in compList:
-                for component in compoentType:
-                    if component.isDragging(): 
-                         = pygame.mouse.get_pos()
-                        component.updatePosition(component.x,component.y)
-
-
-        for compoentType in compList: 
-            for component in compoentType:
-                Area= component.rect
-               
-                if Area.collidepoint(pygame.mouse.get_pos()) and pygame.MOUSEBUTTONUP:
-                    component.notDrag()
-                    print("Hovering")
 
 
         for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
@@ -303,10 +283,25 @@ def CircuitBuilder():
                 for compoentType in compList: 
                     for component in compoentType:
                         Area= component.rect
-                        if Area.collidepoint(events.pos) and pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
+                        if Area.collidepoint(pygame.mouse.get_pos()) and pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
                                                                                             #and if the mousebutton is being left clicked at the same time
                             component.drag()  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
                             print("Dragging")
+
+                        if component.isDragging(): 
+                            component.x,component.y= pygame.mouse.get_pos()
+                            component.updatePosition(component.x,component.y)
+                            #This bit of code moves the position of the square to the position of the cursor
+
+                for compoentType in compList: 
+                    for component in compoentType:
+                        Area= component.rect
+               
+                        if component.isDragging and pygame.MOUSEBUTTONUP:
+                            component.notDrag()
+                            print("Hovering")
+
+
 
 
         for battery in BatteryList:# This loop iterates through the Battery list and draws the them to the screen
