@@ -130,7 +130,7 @@ class waveNode():
     def __init__(self,x):
         self.y= 180
         self.x=x 
-        self.r= 20
+        self.r= 15
         self.rect= pygame.Rect(self.x,self.y,self.r,self.r)
 
     def drawNode(self,surface):
@@ -144,6 +144,7 @@ class primaryWaveNode(waveNode):
         super.__init__()
         self.amplitude = amplitude
         self.frequency= frequency 
+        
 waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
                   ,waveNode(125),waveNode(145),waveNode(165),waveNode(185),waveNode(205)
                   ,waveNode(225),waveNode(245),waveNode(265),waveNode(285),waveNode(305)
@@ -191,7 +192,30 @@ def WaveSim():
     WaveGenerator.grid(row=6,column=1,columnspan=10)
     os.environ['SDL_WINDOWID'] = str(WaveGenerator.winfo_id()) 
     os.environ['SDL_VIDEODRIVER'] = 'windib'
-    waveMedium= pygame.display.set_mode((160,90))
+    screenSize= (160,90)
+    waveMedium= pygame.display.set_mode(screenSize)
+
+    nodeNumber=len(waveNodeList)
+
+    
+    def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
+        waveMedium.fill((0,0,0))  
+        for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
+            if events == pygame.QUIT:
+                pygame.quit
+                sys.exit
+
+        for nodes in waveNodeList:
+            nodes.drawNode(waveMedium)
+
+
+
+
+
+
+        pygame.display.update()
+        # schedule the next update using recursion
+        windowTkinter.after(100, update_pygame)
     #Tkinter Buttons
 
     referenceLineButton= Button(windowTkinter,text="Reference Line",command= createReferenceLine,foreground="Black",).grid(row=2,column=0,sticky="w")
@@ -210,24 +234,8 @@ def WaveSim():
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
 
 
-    nodeNumber=len(waveNodeList)
-
-    
-    def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
-       waveMedium.fill((0, 0, 0))  
-       
-       for nodes in range(0,nodeNumber):
-           nodes.drawNode# This loop iterates through the waveNodeList for all of the wave node objects and takes in each object's x and y attribbutes
-
-
-                                                                              
-
-       pygame.display.update()
-       # schedule the next update using recursion
-       windowTkinter.after(16, update_pygame)
-
     # Start the Pygame updating loop
-    windowTkinter.after(16, update_pygame)
+    windowTkinter.after(100, update_pygame)
 
     windowTkinter.mainloop()
     
@@ -306,26 +314,26 @@ def CircuitBuilder():
                 sys.exit
 
 
-            if events.type == pygame.MOUSEBUTTONDOWN:
-                for compoentType in compList: 
-                    for component in compoentType:
-                        Area= component.rect
-                        if Area.collidepoint(pygame.mouse.get_pos()) and pygame.MOUSEBUTTONDOWN:
-                            #This statement is used to check if a component is being hovered over 
-                            #and if the mousebutton is being left clicked at the same time
+            for compoentType in compList: 
+                for component in compoentType:
+                    Area= component.rect
 
-                            component.drag()  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
-                            print("Dragging")
+                    if component.isDragging and events == pygame.MOUSEBUTTONUP and Area.collidepoint(pygame.mouse.get_pos()):
+                        component.notDrag()
+                        print("Hovering")
 
-                        if component.isDragging(): 
-                            component.x,component.y= pygame.mouse.get_pos()
-                            component.updatePosition(component.x,component.y)
-                            #This bit of code moves the position of the square to the position of the cursor
+                    elif Area.collidepoint(pygame.mouse.get_pos()) and events.type==pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
+                                                                                        #and if the mousebutton is being left clicked at the same time
+                        component.drag()  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
+                        component.x,component.y= pygame.mouse.get_pos()
+                        component.updatePosition(component.x,component.y)
+                        print("Dragging")
 
-                        if component.isDragging and pygame.MOUSEBUTTONUP:
-                            component.notDrag()
-                            print("Hovering")
-
+                    if component.isDragging(): 
+                        component.x,component.y= pygame.mouse.get_pos()
+                        component.updatePosition(component.x,component.y)
+                        #This bit of code moves the position of the square to the position of the cursor
+                        
 
                 # for compoentType in compList: 
                 #     for component in compoentType:
