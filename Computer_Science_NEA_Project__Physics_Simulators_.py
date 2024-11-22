@@ -292,14 +292,15 @@ def CircuitBuilder():
         AmmeterList.append(ammeter(10,10))
 
     compList=[BatteryList,ResistorList,WireList,BulbList,VoltmeterList,AmmeterList]
+
     def clearScreen():
         for CompType in compList:
-            for CompObject in CompType:
-                CompObject.destroy
+            CompType.clear()
+            #.clear() clears each of the lists of their object instances
+
         buildingSpace.fill((0,0,0))
-        return compList
-        #In this procceedure I am storing the individual component Lists in 1 2d array 
-        #that I can search through and pop the individual objects in each list. 
+       
+
 
 
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
@@ -307,41 +308,35 @@ def CircuitBuilder():
 
 
 
-
         for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
-            if events == pygame.QUIT:
-                pygame.quit
-                sys.exit
+            if events.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            if events.type == pygame.MOUSEBUTTONUP: 
+                # This code checks if the mouse button has been released for each compoent  
+                for compoentType in compList:
+                    for component in compoentType:
+                        #It is then checked if the components state is still dragging
+                        if component.isDragging():
+                            component.notDrag()
 
+            elif events.type == pygame.MOUSEBUTTONDOWN:
+                for compoentType in compList:
+                    for component in compoentType:
+                        Area = component.rect
+                        if Area.collidepoint(pygame.mouse.get_pos()):
+                            component.drag()  #This statement is used to check if a component is being hovered over 
+                                               #and then the dragging state of the component will be set to true, allowing for it to be dragged
 
-            for compoentType in compList: 
+        if pygame.mouse.get_pressed()[0]:  #Checks if the left mouse button is being pressed
+            for compoentType in compList:
                 for component in compoentType:
-                    Area= component.rect
-
-                    if component.isDragging and events == pygame.MOUSEBUTTONUP and Area.collidepoint(pygame.mouse.get_pos()):
-                        component.notDrag()
-                        print("Hovering")
-
-                    elif Area.collidepoint(pygame.mouse.get_pos()) and events.type==pygame.MOUSEBUTTONDOWN:#This statement is used to check if a component is being hovered over 
-                                                                                        #and if the mousebutton is being left clicked at the same time
-                        component.drag()  #this statment uses the drag method from my comonent template method, which sets the dragging state to be true      
-                        component.x,component.y= pygame.mouse.get_pos()
-                        component.updatePosition(component.x,component.y)
-                        print("Dragging")
-
-                    if component.isDragging(): 
-                        component.x,component.y= pygame.mouse.get_pos()
-                        component.updatePosition(component.x,component.y)
-                        #This bit of code moves the position of the square to the position of the cursor
+                    if component.isDragging(): #Checks if the component can be dragged
+                        component.x, component.y = pygame.mouse.get_pos()
+                        component.updatePosition(component.x, component.y) #Changes the position of the object
                         
 
-                # for compoentType in compList: 
-                #     for component in compoentType:
-                #         Area= component.rect
-               
-                #         if component.isDragging and pygame.MOUSEBUTTONUP:
-                #             component.notDrag()
-                #             print("Hovering")
 
 
 
