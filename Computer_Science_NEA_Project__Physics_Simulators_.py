@@ -64,8 +64,6 @@ class battery(compoentTemplate):
     def drawBattery(self,surface):
         pygame.draw.rect(surface,(0,255,0),self.rect)
 
-
-
 class resistor(compoentTemplate):
     def __init__(self,x,y):
         super().__init__()
@@ -100,7 +98,6 @@ class bulb(compoentTemplate):
 
     def drawBulb(self,surface):
         pygame.draw.circle(surface,(255,255,0),(self.x,self.y),self.r)
-
 
 class voltmeter(compoentTemplate):
     def __init__ (self,x,y):
@@ -154,9 +151,6 @@ def resetAmp():
     for node in waveNodeList:
         node.y= 180
 
-   
-
-
 class referenceLine():
     def __init__(self):
         self.x=0 
@@ -171,13 +165,26 @@ class referenceLine():
 
 refline=[]
 def createReferenceLine():
-    refline.append(referenceLine)
+    if len(refline) >= 1:
+        refline.append(referenceLine)
+    else: 
+        pass 
 
 class stopwatch():
-   def __init__(self,StopwatchDisplay,minutes=0,seconds=0):
-        self.minutes= minutes
-        self.seconds= seconds
-        self.StopwatchDisplay= StopwatchDisplay
+    def __init__(self):
+        self.minutes= 0
+        self.seconds= 0
+        self.StopwatchDisplay= pygame.Rect(50,50,50,50)
+        self.startFlag = False
+        self.startTime= 0
+
+    def startCount(self):
+       self.startFlag = True
+       self.startTime= time.perf_counter()
+    
+    def stopCount(self):
+        self.startFlag = False
+       
                                         
 #Simulation screens
 def WaveSim():
@@ -189,13 +196,17 @@ def WaveSim():
     WaveGenerator= Frame(windowTkinter,width=540,height=360)
     #Since the Wave simulator is going to be similar to the Circuit Builder
     #the same technique can be used to make the window for the wave medium
-    WaveGenerator.grid(row=6,column=1,columnspan=10)
+    WaveGenerator.grid(row=10,column=1,columnspan=10)
     os.environ['SDL_WINDOWID'] = str(WaveGenerator.winfo_id()) 
     os.environ['SDL_VIDEODRIVER'] = 'windib'
     screenSize= (160,90)
     waveMedium= pygame.display.set_mode(screenSize)
 
+    stopwatch1= stopwatch()
     nodeNumber=len(waveNodeList)
+
+#    stopwatch1.startCount()
+
 
     
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
@@ -208,7 +219,11 @@ def WaveSim():
         for nodes in waveNodeList:
             nodes.drawNode(waveMedium)
 
-
+        if stopwatch1.startFlag == True:
+            currentTime= time.perf_counter()
+            timeDiff= currentTime - stopwatch1.startTime
+            timeDiff = round(timeDiff,2)
+            print(timeDiff)
 
 
 
@@ -219,16 +234,18 @@ def WaveSim():
     #Tkinter Buttons
 
     referenceLineButton= Button(windowTkinter,text="Reference Line",command= createReferenceLine,foreground="Black",).grid(row=2,column=0,sticky="w")
-    rulerButton= Button(windowTkinter,text="Ruler",command= Iteration1Function,foreground="Black",).grid(row=3,column=0,sticky="w")
-    normalButton=Button(windowTkinter, text="Normal",command=Iteration1Function,foreground="Black").grid(row=4,column=0,sticky="w")
-    slowButton= Button(windowTkinter, text="Slow", command= Iteration1Function,foreground="Black").grid(row=5,column=0,sticky="w")
-    resetButton=Button(windowTkinter, text="Reset Wave",command= resetAmp,foreground="Black").grid(row=6,column=0,sticky="w")
+    startStopwatchButton= Button(windowTkinter,text="Start Stopwatch",command= stopwatch1.startCount,foreground="Black",).grid(row=3,column=0,sticky="w")
+    stopStopwatchButton= Button(windowTkinter,text="Stop Stopwatch",command= stopwatch1.stopCount,foreground="Black",).grid(row=4,column=0,sticky="w")
+    rulerButton= Button(windowTkinter,text="Ruler",command= Iteration1Function,foreground="Black",).grid(row=5,column=0,sticky="w")
+    normalButton=Button(windowTkinter, text="Normal",command=Iteration1Function,foreground="Black").grid(row=6,column=0,sticky="w")
+    slowButton= Button(windowTkinter, text="Slow", command= Iteration1Function,foreground="Black").grid(row=7,column=0,sticky="w")
+    resetButton=Button(windowTkinter, text="Reset Wave",command= resetAmp,foreground="Black").grid(row=10,column=0,sticky="w")
 
-    amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= Iteration1Function,foreground="Black").grid(row=7,column=1,sticky="s")
-    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= Iteration1Function,foreground="Black").grid(row=7,column=2,sticky="s")
+    amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= Iteration1Function,foreground="Black").grid(row=11,column=1,sticky="s")
+    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= Iteration1Function,foreground="Black").grid(row=11,column=2,sticky="s")
 
-    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= Iteration1Function,foreground="Black").grid(row=7,column=4,sticky="s")
-    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= Iteration1Function,foreground="Black").grid(row=7,column=5,sticky="s")
+    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= Iteration1Function,foreground="Black").grid(row=11,column=4,sticky="s")
+    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= Iteration1Function,foreground="Black").grid(row=11,column=5,sticky="s")
 
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
@@ -238,8 +255,6 @@ def WaveSim():
     windowTkinter.after(100, update_pygame)
 
     windowTkinter.mainloop()
-    
-
 
 def CircuitBuilder():
     global screenSizeTk
@@ -381,8 +396,6 @@ def CircuitBuilder():
     windowTkinter.after(100, update_pygame)
     windowTkinter.mainloop()
     
-    
-
 def MainMenu():
     global CircuitBuilder,WaveSim,screenSizePygame,screenSizeTk
     
