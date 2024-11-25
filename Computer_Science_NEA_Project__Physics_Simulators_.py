@@ -1,5 +1,5 @@
 from re import L
-import time,threading,tkinter,sqlite3,pygame,os,sys
+import time,threading,tkinter,sqlite3,pygame,os,sys,math 
 from turtle import right
 from tkinter import *
 
@@ -112,7 +112,7 @@ class ammeter(compoentTemplate):
         
 
     def drawAmmeter(self,surface):
-        pygame.draw.rect(surface,(173,216,230),self.rect)
+        pygame.draw.rect(surface,(255,0,255),self.rect)
 #_____________________________________________________________
 
 class waveNode():
@@ -122,6 +122,13 @@ class waveNode():
         self.x=x 
         self.r= 10
         self.rect= pygame.Rect(self.x,self.y,self.r,self.r)
+        self.direction= False
+        self.amplitude =0
+        self.frequency=0
+        #self.direction will be used to manage how the wave node is moving, False corrosponds to moving up
+        # True corrosponds to moving down.
+        # This is to avoid the wave nodes from oscillating between their amplitude and their amplitudes-1. 
+         
 
     def drawNode(self,surface):
         pygame.draw.circle(surface,(0,0,255),(self.x,self.y),self.r)
@@ -129,12 +136,56 @@ class waveNode():
     def givepos(self,nextNode):
         pass
 
-class primaryWaveNode(waveNode):
-    def __init__(self,amplitude,frequency):
-        super.__init__()
-        self.amplitude = amplitude
-        self.frequency= frequency 
+
+    def increaseAmp(self):
+        self.amplitude+= 1
+
+    def increaseFreq(self):
+        self.frequency+= 1
+
+    def decreaseAmp(self):
+        self.amplitude-= 1
+
+    def decreaseFreq(self): 
+        self.frequency-=1 
+
+    def oscillate(self):
+        if self.y >= self.amplitude:
+            self.direction = True
+        elif self.y <= -self.amplitude:
+            self.direction = False 
+
+
+
+# class primaryWaveNode(waveNode):
+#     def __init__(self):
+#         super.__init__()
+
+
+
+    # def increaseAmp(self):
+    #     self.amplitude+= 1
+
+    # def increaseFreq(self):
+    #     self.frequency+= 1
+
+    # def decreaseAmp(self):
+    #     self.amplitude-= 1
+
+    # def decreaseFreq(self): 
+    #     self.frequency-=1 
+
+    # def oscillate(self):
+    #     if self.y >= self.amplitude:
+    #         self.direction = True
+    #     elif self.y <= -self.amplitude:
+    #         self.direction = False 
         
+
+#These functions will need to have if statments for validation
+#The if statments will be written when I test the movement of the saves so I can define a limit of how much the amplitude
+# can increase/decrese by. 
+
 rulerList=[]
 class RulerX():
     def __init__(self):
@@ -156,14 +207,11 @@ class RulerX():
         self.x = x
         self.y = y
         self.rect.topleft = (self.x, self.y)  # Update rect position
-
-
 class RulerY(RulerX):
     def __init__(self):
         super().__init__()
         self.rect= pygame.Rect(self.x,self.y,30,480)
         self.colour= (255,0,255)
-
 def rulerCreation():
     rulerList.append(RulerX())
     rulerList.append(RulerY())
@@ -193,8 +241,6 @@ class referenceLine():
 
     def drawRefLine(self,surface):
         pygame.draw.rect(surface,(0,255,0),self.rect)
-
-
 refline=[]
 def createReferenceLine():
     refline.append(referenceLine())
@@ -270,23 +316,31 @@ def WaveSim():
                     Ruler.x, Ruler.y = pygame.mouse.get_pos()
                     Ruler.updatePosition(Ruler.x, Ruler.y ) #Changes the position of the object
                     
+        for node in waveNodeList:
+            node.oscillate() 
+            if node.direction== False: # From the Oscillate function, the direction may change at amplitude so regular checks are needed
+                                       # to check if each node is at amplitude. 
+                node.y+= node.frequency 
+            
+            elif node.direction== True:
+                node.y -= node.frequency
 
 
-        for nodes in waveNodeList:
-            nodes.drawNode(waveMedium)
+            node.drawNode(waveMedium)
+
+
 
         if stopwatch1.startFlag == True:
             currentTime= time.perf_counter()
             timeDiff= currentTime - stopwatch1.startTime
             timeDiff = round(timeDiff,2)
             print(timeDiff)
-
         for line in refline:
             line.drawRefLine(waveMedium)
-
         for ruler in rulerList:
             ruler.drawRuler(waveMedium)
 
+        
 
         pygame.display.update()
         # schedule the next update using recursion
