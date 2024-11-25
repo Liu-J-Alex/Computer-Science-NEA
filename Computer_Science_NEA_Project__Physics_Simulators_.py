@@ -31,20 +31,14 @@ class compoentTemplate():
         self.dragging = False
         self.x = 0
         self.y = 0
-        self.rect = pygame.Rect(self.x, self.y, 0, 0)  
-
-    def destroy(self):
-        self.destroy
-
+        self.rect = pygame.Rect(self.x, self.y, 0, 0)
+  
     def isDragging(self):
         return self.dragging
-
     def drag(self):
         self.dragging = True
-
     def notDrag(self):
         self.dragging = False
-
     def updatePosition(self, x, y):
         self.x = x
         self.y = y
@@ -60,7 +54,6 @@ class battery(compoentTemplate):
         self.y= y
         self.rect= pygame.Rect(self.x,self.y,100,50)
         
-
     def drawBattery(self,surface):
         pygame.draw.rect(surface,(0,255,0),self.rect)
 
@@ -127,7 +120,7 @@ class waveNode():
     def __init__(self,x):
         self.y= 180
         self.x=x 
-        self.r= 15
+        self.r= 10
         self.rect= pygame.Rect(self.x,self.y,self.r,self.r)
 
     def drawNode(self,surface):
@@ -157,7 +150,7 @@ class RulerX():
         return self.dragging
     def drag(self):
         self.dragging = True
-    def notDrag(self):s
+    def notDrag(self):
         self.dragging = False
     def updatePosition(self, x, y):
         self.x = x
@@ -182,7 +175,7 @@ def ToggleRulers():
     else:
         rulerDeletion()
 
-        
+
 waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
                   ,waveNode(125),waveNode(145),waveNode(165),waveNode(185),waveNode(205)
                   ,waveNode(225),waveNode(245),waveNode(265),waveNode(285),waveNode(305)
@@ -195,21 +188,24 @@ def resetAmp():
 class referenceLine():
     def __init__(self):
         self.x=0 
-        self.y= 180
-        self.rect= pygame.Rect(self.x,self.y,160,10)
+        self.y= 177
+        self.rect= pygame.Rect(self.x,self.y,510,6)
 
     def drawRefLine(self,surface):
         pygame.draw.rect(surface,(0,255,0),self.rect)
 
-    def destroy(self):
-        self.destroy
 
 refline=[]
 def createReferenceLine():
-    if len(refline) >= 1:
-        refline.append(referenceLine)
-    else: 
-        pass 
+    refline.append(referenceLine())
+def destroyReferenceLine():
+    refline.clear()
+def toggleReferenceLine():
+    if len(refline) == 0:
+        createReferenceLine()
+    else:
+        destroyReferenceLine()
+    
 
 class stopwatch():
     def __init__(self):
@@ -246,9 +242,6 @@ def WaveSim():
     stopwatch1= stopwatch()
     nodeNumber=len(waveNodeList)
 
-#    stopwatch1.startCount()
-
-
     
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         waveMedium.fill((0,0,0))  
@@ -256,6 +249,28 @@ def WaveSim():
             if events == pygame.QUIT:
                 pygame.quit
                 sys.exit
+
+            if events.type == pygame.MOUSEBUTTONUP: 
+                # This code checks if the mouse button has been released for each compoent  
+                for Ruler in rulerList:
+                    #It is then checked if the components state is still dragging
+                    if Ruler.isDragging():
+                        Ruler.notDrag()
+
+            elif events.type == pygame.MOUSEBUTTONDOWN:
+                for Ruler in rulerList:
+                        Area = Ruler.rect
+                        if Area.collidepoint(pygame.mouse.get_pos()):
+                            Ruler.drag()  #This statement is used to check if a component is being hovered over 
+                                               #and then the dragging state of the component will be set to true, allowing for it to be dragged
+
+        if pygame.mouse.get_pressed()[0]:  #Checks if the left mouse button is being pressed
+            for Ruler in rulerList:
+                if Ruler.isDragging(): #Checks if the component can be dragged
+                    Ruler.x, Ruler.y = pygame.mouse.get_pos()
+                    Ruler.updatePosition(Ruler.x, Ruler.y ) #Changes the position of the object
+                    
+
 
         for nodes in waveNodeList:
             nodes.drawNode(waveMedium)
@@ -266,7 +281,11 @@ def WaveSim():
             timeDiff = round(timeDiff,2)
             print(timeDiff)
 
+        for line in refline:
+            line.drawRefLine(waveMedium)
 
+        for ruler in rulerList:
+            ruler.drawRuler(waveMedium)
 
 
         pygame.display.update()
@@ -274,10 +293,10 @@ def WaveSim():
         windowTkinter.after(100, update_pygame)
     #Tkinter Buttons
 
-    referenceLineButton= Button(windowTkinter,text="Reference Line",command= createReferenceLine,foreground="Black",).grid(row=2,column=0,sticky="w")
+    referenceLineButton= Button(windowTkinter,text="Reference Line",command= toggleReferenceLine,foreground="Black",).grid(row=2,column=0,sticky="w")
     startStopwatchButton= Button(windowTkinter,text="Start Stopwatch",command= stopwatch1.startCount,foreground="Black",).grid(row=3,column=0,sticky="w")
     stopStopwatchButton= Button(windowTkinter,text="Stop Stopwatch",command= stopwatch1.stopCount,foreground="Black",).grid(row=4,column=0,sticky="w")
-    rulerButton= Button(windowTkinter,text="Ruler",command= Iteration1Function,foreground="Black",).grid(row=5,column=0,sticky="w")
+    rulerButton= Button(windowTkinter,text="Ruler",command= ToggleRulers,foreground="Black",).grid(row=5,column=0,sticky="w")
     normalButton=Button(windowTkinter, text="Normal",command=Iteration1Function,foreground="Black").grid(row=6,column=0,sticky="w")
     slowButton= Button(windowTkinter, text="Slow", command= Iteration1Function,foreground="Black").grid(row=7,column=0,sticky="w")
     resetButton=Button(windowTkinter, text="Reset Wave",command= resetAmp,foreground="Black").grid(row=10,column=0,sticky="w")
@@ -294,7 +313,6 @@ def WaveSim():
 
     # Start the Pygame updating loop
     windowTkinter.after(100, update_pygame)
-
     windowTkinter.mainloop()
 
 def CircuitBuilder():
