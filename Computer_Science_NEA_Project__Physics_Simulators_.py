@@ -142,6 +142,47 @@ class primaryWaveNode(waveNode):
         self.amplitude = amplitude
         self.frequency= frequency 
         
+rulerList=[]
+class RulerX():
+    def __init__(self):
+        self.x=125
+        self.y=200
+        self.rect= pygame.Rect(self.x,self.y,500,30)
+        self.colour= (255,255,0)
+        self.dragging= False
+    
+    def drawRuler(self,surface):
+        pygame.draw.rect(surface,self.colour,self.rect)
+    def isDragging(self):
+        return self.dragging
+    def drag(self):
+        self.dragging = True
+    def notDrag(self):s
+        self.dragging = False
+    def updatePosition(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.topleft = (self.x, self.y)  # Update rect position
+
+
+class RulerY(RulerX):
+    def __init__(self):
+        super().__init__()
+        self.rect= pygame.Rect(self.x,self.y,30,480)
+        self.colour= (255,0,255)
+
+def rulerCreation():
+    rulerList.append(RulerX())
+    rulerList.append(RulerY())
+def rulerDeletion():
+    rulerList.clear()
+def ToggleRulers():
+    if len(rulerList)<2:
+        rulerCreation()
+    else:
+        rulerDeletion()
+
+        
 waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
                   ,waveNode(125),waveNode(145),waveNode(165),waveNode(185),waveNode(205)
                   ,waveNode(225),waveNode(245),waveNode(265),waveNode(285),waveNode(305)
