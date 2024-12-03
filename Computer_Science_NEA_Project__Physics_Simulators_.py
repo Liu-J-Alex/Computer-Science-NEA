@@ -16,6 +16,7 @@ def Iteration1Function():
     #doesn't allow pass as a command in buttons
     pass
 
+
 # Circuit Builder Classes
 class electron():
     def _init_(self,voltage,speed,direction):
@@ -133,21 +134,18 @@ class waveNode():
     def drawNode(self,surface):
         pygame.draw.circle(surface,(0,0,255),(self.x,self.y),self.r)
 
-    def givepos(self,nextNode):
-        pass
-
-
     def increaseAmp(self):
-        self.amplitude+= 1
+        self.amplitude+= 10
+        print(self.amplitude)
 
     def increaseFreq(self):
-        self.frequency+= 1
+        self.frequency+= 0.2
 
     def decreaseAmp(self):
-        self.amplitude-= 1
+        self.amplitude-= 10
 
     def decreaseFreq(self): 
-        self.frequency-=1 
+        self.frequency-=0.2
 
     def oscillate(self,wt):
         wt= wt*self.frequency # when wt is passed in as a paramater it will be 2pi* the elapsed time.  
@@ -224,19 +222,13 @@ waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
 def resetWave():
     for node in waveNodeList:
         node.y= 180
+        node.amplitude=0
+        node.frequency=0 
 def increaseAmplitude():
-    for node in waveNodeList:
-        if node.amplitude == 100:
-            pass
-        else:
-            node.amplitude += 1
+    waveNodeList[0].increaseAmp()
 
 def decreaseAmplitude():
-    for node in waveNodeList:
-        if node.amplitude==0:
-            pass
-        else:
-            node.amplitude -= 1
+    waveNodeList[0].decreaseAmp()
 
 def increaseFrequency():
     if waveNodeList[0].frequency == 5:
@@ -259,8 +251,6 @@ def decreaseFrequency():
     else: 
         waveNodeList[0].frequency -= 1
         print(waveNodeList[0].frequency)
-
-
 
 class referenceLine():
     def __init__(self):
@@ -301,7 +291,7 @@ def WaveSim():
     waveMedium= pygame.display.set_mode(screenSize)
 
     stopwatch1= stopwatch()
-    nodeNumber=len(waveNodeList)
+
 
     
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
@@ -317,14 +307,12 @@ def WaveSim():
                     #It is then checked if the components state is still dragging
                     if Ruler.isDragging():
                         Ruler.notDrag()
-
             elif events.type == pygame.MOUSEBUTTONDOWN:
                 for Ruler in rulerList:
                         Area = Ruler.rect
                         if Area.collidepoint(pygame.mouse.get_pos()):
                             Ruler.drag()  #This statement is used to check if a component is being hovered over 
                                                #and then the dragging state of the component will be set to true, allowing for it to be dragged
-
         if pygame.mouse.get_pressed()[0]:  #Checks if the left mouse button is being pressed
             for Ruler in rulerList:
                 if Ruler.isDragging(): #Checks if the component can be dragged
@@ -338,6 +326,7 @@ def WaveSim():
             internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
             elapsedTime = round(internaltimeDiff,2)
             print(elapsedTime)
+  
 
 
         for node in waveNodeList:
@@ -346,9 +335,10 @@ def WaveSim():
                                              # Because it can give the displacement of each node.
                                              # and accounts for when each node is at its amplitude aswell
                                              # When each node reach their amplitudes, they travel back as teh sin function will return negative
-            dy= node.y + displacement
-            node.updatePosition(dy)
+            dy= 180 + displacement
+     
 
+            node.updatePosition(dy)
             node.drawNode(waveMedium)
 
 
@@ -367,7 +357,7 @@ def WaveSim():
 
         pygame.display.update()
         # schedule the next update using recursion
-        windowTkinter.after(100, update_pygame)
+        windowTkinter.after(16, update_pygame)
     #Tkinter Buttons
 
     referenceLineButton= Button(windowTkinter,text="Reference Line",command= toggleReferenceLine,foreground="Black",).grid(row=2,column=0,sticky="w")
@@ -389,7 +379,7 @@ def WaveSim():
 
 
     # Start the Pygame updating loop
-    windowTkinter.after(100, update_pygame)
+    windowTkinter.after(16, update_pygame)
     windowTkinter.mainloop()
 
 def CircuitBuilder():
