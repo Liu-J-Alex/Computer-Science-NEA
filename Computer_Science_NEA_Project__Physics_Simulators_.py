@@ -149,42 +149,18 @@ class waveNode():
     def decreaseFreq(self): 
         self.frequency-=1 
 
-    def oscillate(self):
-        if self.y >= self.amplitude:
-            self.direction = True
-        elif self.y <= -self.amplitude:
-            self.direction = False 
+    def oscillate(self,wt):
+        wt= wt*self.frequency # when wt is passed in as a paramater it will be 2pi* the elapsed time.  
+        displacement= self.amplitude*math.sin(wt) # I am using an equation from simple harmoinic motion to give the displacement of each wave node. 
+        return displacement
+
+    def updatePosition(self,y):
+        self.y= y
+        self.x= self.x
+        self.rect.topleft = (self.x, self.y)  
 
 
 
-# class primaryWaveNode(waveNode):
-#     def __init__(self):
-#         super.__init__()
-
-
-
-    # def increaseAmp(self):
-    #     self.amplitude+= 1
-
-    # def increaseFreq(self):
-    #     self.frequency+= 1
-
-    # def decreaseAmp(self):
-    #     self.amplitude-= 1
-
-    # def decreaseFreq(self): 
-    #     self.frequency-=1 
-
-    # def oscillate(self):
-    #     if self.y >= self.amplitude:
-    #         self.direction = True
-    #     elif self.y <= -self.amplitude:
-    #         self.direction = False 
-        
-
-#These functions will need to have if statments for validation
-#The if statments will be written when I test the movement of the saves so I can define a limit of how much the amplitude
-# can increase/decrese by. 
 
 rulerList=[]
 class RulerX():
@@ -223,15 +199,68 @@ def ToggleRulers():
     else:
         rulerDeletion()
 
+class stopwatch():
+    def __init__(self):
+        self.minutes= 0
+        self.seconds= 0
+        self.StopwatchDisplay= pygame.Rect(50,50,50,50)
+        self.startFlag = False
+        self.startTime= 0
+
+    def startCount(self):
+       self.startFlag = True
+       self.startTime= time.perf_counter()
+    
+    def stopCount(self):
+        self.startFlag = False
+internalStopwatch= stopwatch()
 
 waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
                   ,waveNode(125),waveNode(145),waveNode(165),waveNode(185),waveNode(205)
                   ,waveNode(225),waveNode(245),waveNode(265),waveNode(285),waveNode(305)
                   ,waveNode(325),waveNode(345),waveNode(365),waveNode(385),waveNode(405)
                   ,waveNode(425),waveNode(445),waveNode(465),waveNode(485),waveNode(505)]#This is the list of nodes that make up the wave medium
-def resetAmp():
+# waveNodeList[0].frequency
+def resetWave():
     for node in waveNodeList:
         node.y= 180
+def increaseAmplitude():
+    for node in waveNodeList:
+        if node.amplitude == 100:
+            pass
+        else:
+            node.amplitude += 1
+
+def decreaseAmplitude():
+    for node in waveNodeList:
+        if node.amplitude==0:
+            pass
+        else:
+            node.amplitude -= 1
+
+def increaseFrequency():
+    if waveNodeList[0].frequency == 5:
+        pass
+    elif waveNodeList[0].frequency == 0:
+        internalStopwatch.startCount()
+        waveNodeList[0].frequency += 1
+        print(waveNodeList[0].frequency)
+        
+    else: 
+        waveNodeList[0].frequency+=1
+        print(waveNodeList[0].frequency)
+    
+
+def decreaseFrequency():
+    if waveNodeList[0].frequency == 0:
+        pass
+    elif waveNodeList[0].frequency == 0:
+        internalStopwatch.stopCount()
+    else: 
+        waveNodeList[0].frequency -= 1
+        print(waveNodeList[0].frequency)
+
+
 
 class referenceLine():
     def __init__(self):
@@ -253,21 +282,7 @@ def toggleReferenceLine():
         destroyReferenceLine()
     
 
-class stopwatch():
-    def __init__(self):
-        self.minutes= 0
-        self.seconds= 0
-        self.StopwatchDisplay= pygame.Rect(50,50,50,50)
-        self.startFlag = False
-        self.startTime= 0
 
-    def startCount(self):
-       self.startFlag = True
-       self.startTime= time.perf_counter()
-    
-    def stopCount(self):
-        self.startFlag = False
-       
                                         
 #Simulation screens
 def WaveSim():
@@ -316,15 +331,23 @@ def WaveSim():
                     Ruler.x, Ruler.y = pygame.mouse.get_pos()
                     Ruler.updatePosition(Ruler.x, Ruler.y ) #Changes the position of the object
                     
-        for node in waveNodeList:
-            node.oscillate() 
-            if node.direction== False: # From the Oscillate function, the direction may change at amplitude so regular checks are needed
-                                       # to check if each node is at amplitude. 
-                node.y+= node.frequency 
-            
-            elif node.direction== True:
-                node.y -= node.frequency
 
+        elapsedTime=0
+        if waveNodeList[0].frequency>0:
+            internalcurrentTime= time.perf_counter()
+            internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
+            elapsedTime = round(internaltimeDiff,2)
+            print(elapsedTime)
+
+
+        for node in waveNodeList:
+            wt= 2*math.pi*elapsedTime
+            displacement= node.oscillate(wt) #I am using an equation from simple harmonic motion.
+                                             # Because it can give the displacement of each node.
+                                             # and accounts for when each node is at its amplitude aswell
+                                             # When each node reach their amplitudes, they travel back as teh sin function will return negative
+            dy= node.y + displacement
+            node.updatePosition(dy)
 
             node.drawNode(waveMedium)
 
@@ -353,13 +376,13 @@ def WaveSim():
     rulerButton= Button(windowTkinter,text="Ruler",command= ToggleRulers,foreground="Black",).grid(row=5,column=0,sticky="w")
     normalButton=Button(windowTkinter, text="Normal",command=Iteration1Function,foreground="Black").grid(row=6,column=0,sticky="w")
     slowButton= Button(windowTkinter, text="Slow", command= Iteration1Function,foreground="Black").grid(row=7,column=0,sticky="w")
-    resetButton=Button(windowTkinter, text="Reset Wave",command= resetAmp,foreground="Black").grid(row=10,column=0,sticky="w")
+    resetButton=Button(windowTkinter, text="Reset Wave",command= resetWave,foreground="Black").grid(row=10,column=0,sticky="w")
 
-    amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= Iteration1Function,foreground="Black").grid(row=11,column=1,sticky="s")
-    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= Iteration1Function,foreground="Black").grid(row=11,column=2,sticky="s")
+    amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= increaseAmplitude,foreground="Black").grid(row=11,column=1,sticky="s")
+    amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= decreaseAmplitude,foreground="Black").grid(row=11,column=2,sticky="s")
 
-    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= Iteration1Function,foreground="Black").grid(row=11,column=4,sticky="s")
-    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= Iteration1Function,foreground="Black").grid(row=11,column=5,sticky="s")
+    frequencyButtonInc=Button(windowTkinter,text="Increase Frequency",command= increaseFrequency,foreground="Black").grid(row=11,column=4,sticky="s")
+    frequencyButtonDec= Button(windowTkinter,text="Decrease Frequency",command= decreaseFrequency,foreground="Black").grid(row=11,column=5,sticky="s")
 
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
@@ -386,12 +409,6 @@ def CircuitBuilder():
     buildingSpaceSize= (160,90)
     buildingSpace=pygame.display.set_mode(buildingSpaceSize)
 
-
-    # componentList=[]#This List holds all of the compoents for the circuit builder
-    # componentNumber=len(componentList)#This number is the number of components in the list
-    # def componentCreation():
-    #     componentList.append(battery(10,10,10,10))
-    #     componentNumber= len(componentList)
 
     BatteryList=[]
     BatteryNumber=len(BatteryList)
