@@ -227,30 +227,42 @@ def resetWave():
         node.amplitude=0
         node.frequency=0 
 def increaseAmplitude():
-    waveNodeList[0].increaseAmp()
+    for node in waveNodeList:
+        if node.amplitude== 1000:
+            pass
+        else: 
+            node.increaseAmp()
 
 def decreaseAmplitude():
-    waveNodeList[0].decreaseAmp()
+    for node in waveNodeList:
+        if node.amplitude == 0:
+            pass
+        else:
+            node.decreaseAmp()
+
 
 def increaseFrequency():
-    if waveNodeList[0].frequency == 1000:
-        pass
-    elif waveNodeList[0].frequency == 0:
-        internalStopwatch.startCount()
-        waveNodeList[0].frequency += 1
-        print(waveNodeList[0].frequency)
-        
-    else: 
-        waveNodeList[0].frequency+=1
-        print(waveNodeList[0].frequency)
+    for node in waveNodeList:
+        if node.frequency == 1000:
+            pass
+        elif node.frequency == 0:
+            internalStopwatch.startCount()
+            node.frequency += 1
+            print(node.frequency)
+
+        else: 
+            node.frequency+=1
+            print(node.frequency)
+
 def decreaseFrequency():
-    if waveNodeList[0].frequency == 0:
-        pass
-    elif waveNodeList[0].frequency == 0:
-        internalStopwatch.stopCount()
-    else: 
-        waveNodeList[0].frequency -= 1
-        print(waveNodeList[0].frequency)
+    for node in waveNodeList:
+        if node.frequency == 0:
+            pass
+        elif node.frequency == 0:
+            internalStopwatch.stopCount()
+        else: 
+            node.frequency -= 1
+            print(node.frequency)
 
 class referenceLine():
     def __init__(self):
@@ -326,26 +338,27 @@ def WaveSim():
             internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
             elapsedTime = round(internaltimeDiff,2)
    
-  
-
-
-
-
         for index, node in enumerate (waveNodeList):
-            if index == 0:
-                wt= 2*math.pi*elapsedTime
-                displacement= waveNodeList[0].oscillate(wt) #I am using an equation from simple harmonic motion.
-                                                    # Because it can give the displacement of each node.
-                                                    # and accounts for when each node is at its amplitude aswell
-                                                    # When each node reach their amplitudes, they travel back as teh sin function will return negative
-                dy= 180 + displacement
-                waveNodeList[0].updatePosition(dy)
+            # if index == 0:
+            #     wt= 2*math.pi*elapsedTime
+            #     displacement= waveNodeList[0].oscillate(wt) #I am using an equation from simple harmonic motion.
+            #                                         # Because it can give the displacement of each node.
+            #                                         # and accounts for when each node is at its amplitude aswell
+            #                                         # When each node reach their amplitudes, they travel back as teh sin function will return negative
+            #     dy= 180 + displacement
+            #     waveNodeList[0].updatePosition(dy)
 
-            else:
-          
-                node.displacement= waveNodeList[index-1].displacement
-                dy= 180+ node.displacement
-                node.updatePosition(dy)
+            # else:
+            nodeTime= elapsedTime - index
+            nodeTime= abs(nodeTime)
+            print(nodeTime)
+            wt= 2*math.pi*nodeTime
+            displacement= node.oscillate(wt)
+
+            
+            dy= 180+ displacement
+            node.updatePosition(dy)
+        
 
 
 
