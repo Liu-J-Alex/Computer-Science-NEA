@@ -126,6 +126,7 @@ class waveNode():
         self.direction= False
         self.amplitude =0
         self.frequency=0
+        self.displacement=0
         #self.direction will be used to manage how the wave node is moving, False corrosponds to moving up
         # True corrosponds to moving down.
         # This is to avoid the wave nodes from oscillating between their amplitude and their amplitudes-1. 
@@ -139,17 +140,18 @@ class waveNode():
         print(self.amplitude)
 
     def increaseFreq(self):
-        self.frequency+= 0.2
+        self.frequency+= 0.1
 
     def decreaseAmp(self):
         self.amplitude-= 10
 
     def decreaseFreq(self): 
-        self.frequency-=0.2
+        self.frequency-=0.1
 
     def oscillate(self,wt):
         wt= wt*self.frequency # when wt is passed in as a paramater it will be 2pi* the elapsed time.  
         displacement= self.amplitude*math.sin(wt) # I am using an equation from simple harmoinic motion to give the displacement of each wave node. 
+        self.displacement= displacement
         return displacement
 
     def updatePosition(self,y):
@@ -231,7 +233,7 @@ def decreaseAmplitude():
     waveNodeList[0].decreaseAmp()
 
 def increaseFrequency():
-    if waveNodeList[0].frequency == 5:
+    if waveNodeList[0].frequency == 1000:
         pass
     elif waveNodeList[0].frequency == 0:
         internalStopwatch.startCount()
@@ -241,8 +243,6 @@ def increaseFrequency():
     else: 
         waveNodeList[0].frequency+=1
         print(waveNodeList[0].frequency)
-    
-
 def decreaseFrequency():
     if waveNodeList[0].frequency == 0:
         pass
@@ -325,20 +325,32 @@ def WaveSim():
             internalcurrentTime= time.perf_counter()
             internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
             elapsedTime = round(internaltimeDiff,2)
-            print(elapsedTime)
+   
   
 
 
-        for node in waveNodeList:
-            wt= 2*math.pi*elapsedTime
-            displacement= node.oscillate(wt) #I am using an equation from simple harmonic motion.
-                                             # Because it can give the displacement of each node.
-                                             # and accounts for when each node is at its amplitude aswell
-                                             # When each node reach their amplitudes, they travel back as teh sin function will return negative
-            dy= 180 + displacement
-     
 
-            node.updatePosition(dy)
+
+        for index, node in enumerate (waveNodeList):
+            if index == 0:
+                wt= 2*math.pi*elapsedTime
+                displacement= waveNodeList[0].oscillate(wt) #I am using an equation from simple harmonic motion.
+                                                    # Because it can give the displacement of each node.
+                                                    # and accounts for when each node is at its amplitude aswell
+                                                    # When each node reach their amplitudes, they travel back as teh sin function will return negative
+                dy= 180 + displacement
+                waveNodeList[0].updatePosition(dy)
+
+            else:
+          
+                node.displacement= waveNodeList[index-1].displacement
+                dy= 180+ node.displacement
+                node.updatePosition(dy)
+
+
+
+
+        for node in waveNodeList: 
             node.drawNode(waveMedium)
 
 
