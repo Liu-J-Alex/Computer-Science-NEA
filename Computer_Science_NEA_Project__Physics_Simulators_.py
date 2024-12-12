@@ -137,7 +137,7 @@ class waveNode():
 
     def increaseAmp(self):
         self.amplitude+= 10
-        print(self.amplitude)
+
 
     def increaseFreq(self):
         self.frequency+= 0.1
@@ -333,34 +333,22 @@ def WaveSim():
                     
 
         elapsedTime=0
-        if waveNodeList[0].frequency>0:
+        if waveNodeList[0].frequency>0 and waveNodeList[0].amplitude >0:
             internalcurrentTime= time.perf_counter()
             internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
             elapsedTime = round(internaltimeDiff,2)
    
-        for index, node in enumerate (waveNodeList):
-            # if index == 0:
-            #     wt= 2*math.pi*elapsedTime
-            #     displacement= waveNodeList[0].oscillate(wt) #I am using an equation from simple harmonic motion.
-            #                                         # Because it can give the displacement of each node.
-            #                                         # and accounts for when each node is at its amplitude aswell
-            #                                         # When each node reach their amplitudes, they travel back as teh sin function will return negative
-            #     dy= 180 + displacement
-            #     waveNodeList[0].updatePosition(dy)
 
-            # else:
-            nodeTime= elapsedTime - index
-            nodeTime= abs(nodeTime)
-            print(nodeTime)
-            wt= 2*math.pi*nodeTime
-            displacement= node.oscillate(wt)
 
-            
+
+        for index,node in enumerate(waveNodeList):
+            adjustedIndex= index/25
+            nodetime= elapsedTime- adjustedIndex
+            wt= 2*math.pi*(nodetime)
+            displacement= node.oscillate(wt) 
+
             dy= 180+ displacement
             node.updatePosition(dy)
-        
-
-
 
 
         for node in waveNodeList: 
@@ -372,7 +360,8 @@ def WaveSim():
             currentTime= time.perf_counter()
             timeDiff= currentTime - stopwatch1.startTime
             timeDiff = round(timeDiff,2)
-            print(timeDiff)
+            
+            
         for line in refline:
             line.drawRefLine(waveMedium)
         for ruler in rulerList:
