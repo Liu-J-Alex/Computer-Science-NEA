@@ -118,12 +118,12 @@ class ammeter(compoentTemplate):
 
 class waveNode():
     #To control the frequency, experiment with 1 wave node and see if I can get it to oscillate up and down before I start making the whole sim
-    def __init__(self,x):
+    def __init__(self,x,colour):
         self.y= 180
         self.x=x 
         self.r= 10
         self.rect= pygame.Rect(self.x,self.y,self.r,self.r)
-        self.direction= False
+        self.colour= colour
         self.amplitude =0
         self.frequency=0
         self.displacement=0
@@ -133,7 +133,16 @@ class waveNode():
          
 
     def drawNode(self,surface):
-        pygame.draw.circle(surface,(0,0,255),(self.x,self.y),self.r)
+        if self.colour == "blue":
+            pygame.draw.circle(surface,(0,0,255),(self.x,self.y),self.r)
+        if self.colour == "green":
+            pygame.draw.circle(surface,(255,165,2),(self.x,self.y),self.r)
+            #This is actually orange,the string says green because it was green. 
+            #Before I realised I already used that colour for the reference line. 
+            #Plus it doesn't really matter ¯\_(ツ)_/¯
+        if self.colour == "yellow":
+            pygame.draw.circle(surface,(255,255,0),(self.x,self.y),self.r)
+
 
     def increaseAmp(self):
         self.amplitude+= 10
@@ -215,11 +224,11 @@ class stopwatch():
         self.startFlag = False
 internalStopwatch= stopwatch()
 
-waveNodeList=[ waveNode(25),waveNode(45),waveNode(65),waveNode(85),waveNode(105)
-                  ,waveNode(125),waveNode(145),waveNode(165),waveNode(185),waveNode(205)
-                  ,waveNode(225),waveNode(245),waveNode(265),waveNode(285),waveNode(305)
-                  ,waveNode(325),waveNode(345),waveNode(365),waveNode(385),waveNode(405)
-                  ,waveNode(425),waveNode(445),waveNode(465),waveNode(485),waveNode(505)]#This is the list of nodes that make up the wave medium
+waveNodeList=[ waveNode(25,"yellow"),waveNode(45,"blue"),waveNode(65,"blue"),waveNode(85,"blue"),waveNode(105,"green")
+                  ,waveNode(124,"blue"),waveNode(145,"blue"),waveNode(165,"blue"),waveNode(185,"blue"),waveNode(205,"green")
+                  ,waveNode(225,"blue"),waveNode(245,"blue"),waveNode(265,"blue"),waveNode(285,"blue"),waveNode(305,"green")
+                  ,waveNode(325,"blue"),waveNode(345,"blue"),waveNode(365,"blue"),waveNode(385,"blue"),waveNode(405,"green")
+                  ,waveNode(425,"blue"),waveNode(445,"blue"),waveNode(465,"blue"),waveNode(485,"blue"),waveNode(505,"yellow")]#This is the list of nodes that make up the wave medium
 # waveNodeList[0].frequency
 def resetWave():
     for node in waveNodeList:
@@ -228,7 +237,7 @@ def resetWave():
         node.frequency=0 
 def increaseAmplitude():
     for node in waveNodeList:
-        if node.amplitude== 1000:
+        if node.amplitude== 500:
             pass
         else: 
             node.increaseAmp()
@@ -243,25 +252,23 @@ def decreaseAmplitude():
 
 def increaseFrequency():
     for node in waveNodeList:
-        if node.frequency == 1000:
+        if node.frequency >= 12:
             pass
         elif node.frequency == 0:
             internalStopwatch.startCount()
-            node.frequency += 1
+            node.increaseFreq()
             print(node.frequency)
 
         else: 
-            node.frequency+=1
+            node.increaseFreq()
             print(node.frequency)
 
 def decreaseFrequency():
     for node in waveNodeList:
         if node.frequency == 0:
-            pass
-        elif node.frequency == 0:
             internalStopwatch.stopCount()
         else: 
-            node.frequency -= 1
+            node.decreaseFreq()
             print(node.frequency)
 
 class referenceLine():
