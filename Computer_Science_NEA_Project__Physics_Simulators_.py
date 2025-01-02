@@ -145,17 +145,21 @@ class waveNode():
 
 
     def increaseAmp(self):
-        self.amplitude+= 10
+        self.amplitude+= 3.78
+        self.amplitude= round(self.amplitude,2)
 
 
     def increaseFreq(self):
         self.frequency+= 0.1
+        self.frequency=round(self.frequency,1)
 
     def decreaseAmp(self):
-        self.amplitude-= 10
+        self.amplitude-= 3.78
+        self.amplitude= round(self.amplitude,2)
 
     def decreaseFreq(self): 
         self.frequency-=0.1
+        self.frequency=round(self.frequency,1)
 
     def oscillate(self,wt):
         wt= wt*self.frequency # when wt is passed in as a paramater it will be 2pi* the elapsed time.  
@@ -229,7 +233,7 @@ waveNodeList=[ waveNode(25,"yellow"),waveNode(45,"blue"),waveNode(65,"blue"),wav
                   ,waveNode(225,"blue"),waveNode(245,"blue"),waveNode(265,"blue"),waveNode(285,"blue"),waveNode(305,"green")
                   ,waveNode(325,"blue"),waveNode(345,"blue"),waveNode(365,"blue"),waveNode(385,"blue"),waveNode(405,"green")
                   ,waveNode(425,"blue"),waveNode(445,"blue"),waveNode(465,"blue"),waveNode(485,"blue"),waveNode(505,"yellow")]#This is the list of nodes that make up the wave medium
-# waveNodeList[0].frequency
+
 def resetWave():
     for node in waveNodeList:
         node.y= 180
@@ -241,15 +245,12 @@ def increaseAmplitude():
             pass
         else: 
             node.increaseAmp()
-
 def decreaseAmplitude():
     for node in waveNodeList:
         if node.amplitude == 0:
             pass
         else:
             node.decreaseAmp()
-
-
 def increaseFrequency():
     for node in waveNodeList:
         if node.frequency >= 12:
@@ -262,7 +263,6 @@ def increaseFrequency():
         else: 
             node.increaseFreq()
             print(node.frequency)
-
 def decreaseFrequency():
     for node in waveNodeList:
         if node.frequency == 0:
@@ -270,7 +270,6 @@ def decreaseFrequency():
         else: 
             node.decreaseFreq()
             print(node.frequency)
-
 class referenceLine():
     def __init__(self):
         self.x=0 
@@ -310,9 +309,14 @@ def WaveSim():
     waveMedium= pygame.display.set_mode(screenSize)
 
     stopwatch1= stopwatch()
+    # StopwatchTime=StringVar()
+    # StopwatchTime.set("0.0")
+    StopwatchLabel= Label(windowTkinter,textvariable="0.0").grid(row=10,column=98)
+    secondsLabel= Label(windowTkinter,text= "s").grid(row=10,column=100)
 
 
-    
+
+
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
         waveMedium.fill((0,0,0))  
         for events in pygame.event.get():# I can use this for loop to get events as if this were a traditional pygame game loop
@@ -338,16 +342,12 @@ def WaveSim():
                     Ruler.x, Ruler.y = pygame.mouse.get_pos()
                     Ruler.updatePosition(Ruler.x, Ruler.y ) #Changes the position of the object
                     
-
         elapsedTime=0
         if waveNodeList[0].frequency>0 and waveNodeList[0].amplitude >0:
             internalcurrentTime= time.perf_counter()
             internaltimeDiff= internalcurrentTime - internalStopwatch.startTime
             elapsedTime = round(internaltimeDiff,2)
    
-
-
-
         for index,node in enumerate(waveNodeList):
             adjustedIndex= index/25
             nodetime= elapsedTime- adjustedIndex
@@ -361,20 +361,16 @@ def WaveSim():
         for node in waveNodeList: 
             node.drawNode(waveMedium)
 
-
-
         if stopwatch1.startFlag == True:
             currentTime= time.perf_counter()
             timeDiff= currentTime - stopwatch1.startTime
             timeDiff = round(timeDiff,2)
-            
-            
+            StopwatchLabel.config(text=timeDiff)
+                        
         for line in refline:
             line.drawRefLine(waveMedium)
         for ruler in rulerList:
             ruler.drawRuler(waveMedium)
-
-        
 
         pygame.display.update()
         # schedule the next update using recursion
@@ -388,6 +384,14 @@ def WaveSim():
     normalButton=Button(windowTkinter, text="Normal",command=Iteration1Function,foreground="Black").grid(row=6,column=0,sticky="w")
     slowButton= Button(windowTkinter, text="Slow", command= Iteration1Function,foreground="Black").grid(row=7,column=0,sticky="w")
     resetButton=Button(windowTkinter, text="Reset Wave",command= resetWave,foreground="Black").grid(row=10,column=0,sticky="w")
+
+    frequencyLabel= Label(windowTkinter, text="0").grid(row= 10, column= 98,sticky= N)
+    HzLabel= Label(windowTkinter,text="Hz").grid(row=10 , column=100,sticky= N)
+    
+    AmplitudeLabel= Label(windowTkinter,text="0").grid (row= 10, column=98, sticky= S)
+    cmLabel= Label(windowTkinter, text= "mm").grid(row=10,column =100, sticky= S )
+
+
 
     amplidtudeButtonInc=Button(windowTkinter,text="Increase Amplitude",command= increaseAmplitude,foreground="Black").grid(row=11,column=1,sticky="s")
     amplidtudeButtonDec= Button(windowTkinter,text="Decrease Amplitude",command= decreaseAmplitude,foreground="Black").grid(row=11,column=2,sticky="s")
