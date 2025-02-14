@@ -241,7 +241,7 @@ def resetWave():
         node.frequency=0 
 def increaseAmplitude():
     for node in waveNodeList:
-        if node.amplitude== 500:
+        if node.amplitude>= 170:
             pass
         else: 
             node.increaseAmp()
