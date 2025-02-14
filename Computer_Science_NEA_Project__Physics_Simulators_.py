@@ -309,12 +309,8 @@ def WaveSim():
     waveMedium= pygame.display.set_mode(screenSize)
 
     stopwatch1= stopwatch()
-    # StopwatchTime=StringVar()
-    # StopwatchTime.set("0.0")
-    StopwatchLabel= Label(windowTkinter,textvariable="0.0").grid(row=10,column=98)
-    secondsLabel= Label(windowTkinter,text= "s").grid(row=10,column=100)
-
-
+    StopwatchTime=tkinter.StringVar()
+    StopwatchTime.set("0.0")
 
 
     def update_pygame():# this funtion will act as the main gameloop for pygame, using recursion instead of a while loop
@@ -365,7 +361,9 @@ def WaveSim():
             currentTime= time.perf_counter()
             timeDiff= currentTime - stopwatch1.startTime
             timeDiff = round(timeDiff,2)
-            StopwatchLabel.config(text=timeDiff)
+            print(timeDiff)
+
+
                         
         for line in refline:
             line.drawRefLine(waveMedium)
@@ -402,6 +400,8 @@ def WaveSim():
     quitButton=Button(windowTkinter,text="X",background="red",command=quit,foreground="White").grid(row=0,column=100)
     backButton= Button(windowTkinter,text="Back",background="light blue",command=windowTkinter.destroy,foreground="black").grid(row=0,column=0,sticky="w")
 
+    StopwatchLabel= Label(windowTkinter,textvariable=StopwatchTime).grid(row=10,column=98)
+    secondsLabel= Label(windowTkinter,text= "s").grid(row=10,column=100)
 
     # Start the Pygame updating loop
     windowTkinter.after(16, update_pygame)
